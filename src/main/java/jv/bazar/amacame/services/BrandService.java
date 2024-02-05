@@ -17,10 +17,16 @@ public class BrandService {
 
     /* List All Brands*/
     public ResponseEntity<List<Brand>>  getAllBrands() throws CustomErrorException {
-
+        try {
             List<Brand> brands = brandRepository.findAll();
             return new ResponseEntity<>(brands, HttpStatus.OK);
-
+        } catch (Exception e) {
+            throw CustomErrorException.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message("No se encontraron marcas")
+                    .data(e.getMessage())
+                    .build();
+        }
     }
     /* List brand by id*/
     public ResponseEntity<Brand> getBrandById(Long brandId) throws CustomErrorException {
@@ -31,7 +37,7 @@ public class BrandService {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)
                     .message("Marca no encontrada")
-                    .data(null)
+                    .data(e.getMessage())
                     .build();
         }
     }
@@ -57,7 +63,7 @@ public class BrandService {
             throw CustomErrorException.builder()
                     .status(HttpStatus.BAD_REQUEST)
                     .message("No se pudo actualizar la marca")
-                    .data(null)
+                    .data(e.getMessage())
                     .build();
         }
     }
@@ -71,7 +77,7 @@ public class BrandService {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)
                     .message("Brand not found")
-                    .data(null)
+                    .data(e.getMessage())
                     .build();
         }
     }
