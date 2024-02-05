@@ -16,7 +16,7 @@ public class BrandService {
     private BrandRepository brandRepository;
 
     /* List All Brands*/
-    public ResponseEntity<List<Brand>>  getAllBrands() throws CustomErrorException {
+    public ResponseEntity<List<Brand>> getAllBrands() throws CustomErrorException {
         try {
             List<Brand> brands = brandRepository.findAll();
             return new ResponseEntity<>(brands, HttpStatus.OK);
@@ -28,6 +28,7 @@ public class BrandService {
                     .build();
         }
     }
+
     /* List brand by id*/
     public ResponseEntity<Brand> getBrandById(Long brandId) throws CustomErrorException {
         try {
