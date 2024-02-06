@@ -1,6 +1,8 @@
 package jv.bazar.amacame.controllers;
 
 
+import jv.bazar.amacame.dto.req.BrandReqDto;
+import jv.bazar.amacame.dto.res.BrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +19,22 @@ public class BrandsController {
     private BrandService brandService;
 
     @GetMapping("/list-all/")
-    public ResponseEntity<List<Brand>> listAll() {
+    public ResponseEntity<List<BrandResDTO>> listAll() {
         return brandService.getAllBrands();
     }
 
     @GetMapping("/list-by-id/{brandId}")
-    public ResponseEntity<Brand> listById(@PathVariable Long brandId) {
+    public ResponseEntity<BrandResDTO> listById(@PathVariable Long brandId) {
         return brandService.getBrandById(brandId);
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<Brand> createBrand(@RequestBody Brand brand) {
+    public ResponseEntity<BrandResDTO> createBrand(@RequestBody BrandReqDto brand) {
         return brandService.saveBrand(brand);
     }
 
     @PutMapping("/update/{brandId}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long brandId, @RequestBody Brand brand) {
-        brand.setBrandId(brandId);
-        return brandService.updateBrand(brand);
+    public ResponseEntity<BrandResDTO> updateBrand(@PathVariable Long brandId, @RequestBody BrandReqDto brand) {
+        return brandService.updateBrand(brandId, brand);
     }
 }

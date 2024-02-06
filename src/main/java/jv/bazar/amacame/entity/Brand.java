@@ -1,20 +1,18 @@
 package jv.bazar.amacame.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+
 
 import java.time.Instant;
+import java.util.List;
 
 @Data
 @Entity
@@ -32,4 +30,6 @@ public class Brand {
     @UpdateTimestamp
     private Instant updatedAt;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productBrand")
+    private List<Product> products;
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+ Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="1.0.4" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="4"
+	 default-schema="public" default-owner="postgres"
+	 layers="Default layer"
+	 active-layers="0"
+	 layer-name-colors="#000000"
+	 layer-rect-colors="#b4b4b4"
+	 show-layer-names="false" show-layer-rects="false">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layers="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="products" layers="0" collapse-mode="2" max-obj-count="10" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="220" y="120"/>
+	<column name="product_id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="product_name" not-null="true">
+		<type name="varchar" length="250"/>
+	</column>
+	<column name="product_stock" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<column name="product_buy_price" not-null="true">
+		<type name="numeric" length="5" precision="2"/>
+	</column>
+	<column name="product_sell_price" not-null="true">
+		<type name="numeric" length="5" precision="2"/>
+	</column>
+	<column name="created_at" default-value="CURRENT_DATE">
+		<type name="date" length="0"/>
+	</column>
+	<column name="updated_at" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<column name="product_profit" not-null="true">
+		<type name="numeric" length="5" precision="2"/>
+	</column>
+	<column name="brand_id" not-null="true">
+		<type name="integer" length="0"/>
+	</column>
+	<constraint name="products_primary_key" type="pk-constr" table="public.products">
+		<columns names="product_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="brand" layers="0" collapse-mode="2" max-obj-count="2" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="820" y="120"/>
+	<column name="brand_id" not-null="true">
+		<type name="serial" length="0"/>
+	</column>
+	<column name="brand_name" not-null="true">
+		<type name="varchar" length="50"/>
+	</column>
+	<constraint name="brand_pk" type="pk-constr" table="public.brand">
+		<columns names="brand_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="products_brands_fk" type="fk-constr" comparison-type="MATCH SIMPLE"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.brand" table="public.products">
+	<columns names="brand_id" ref-type="src-columns"/>
+	<columns names="brand_id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_products_brand" type="relfk" layers="0"
+	 src-table="public.products"
+	 dst-table="public.brand" reference-fk="products_brands_fk"
+	 src-required="false" dst-required="true"/>
+
+</dbmodel>
