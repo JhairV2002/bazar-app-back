@@ -1,11 +1,13 @@
 package jv.bazar.amacame.services;
 
 import jv.bazar.amacame.dto.req.BrandReqDto;
+import jv.bazar.amacame.dto.res.BrandProductResDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.exceptions.CustomErrorException;
 import jv.bazar.amacame.mappers.BrandMapper;
 import jv.bazar.amacame.repositories.BrandRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +26,7 @@ public class BrandService {
     /* List All Brands*/
     public ResponseEntity<List<BrandResDTO>> getAllBrands() throws CustomErrorException {
         try {
-            List<Brand> brands = brandRepository.findAll();
+            List<Brand> brands = brandRepository.findByIsActive(true);
             List<BrandResDTO> brandResDTOS = brandMapper.brandToBrandResDTO(brands);
             return new ResponseEntity<>(brandResDTOS, HttpStatus.OK);
         } catch (Exception e) {
@@ -39,13 +41,36 @@ public class BrandService {
     /* List brand by id*/
     public ResponseEntity<BrandResDTO> getBrandById(Long brandId) throws CustomErrorException {
         try {
-            Brand brand = brandRepository.findById(brandId).orElseThrow();
+            Brand brand = brandRepository.findByBrandIdAndIsActive(brandId, true);
+            if (brand != null){
+                throw CustomErrorException.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message("Marca no encontrada")
+                        .data(brand)
+                        .build();
+            }
             return new ResponseEntity<>(brandMapper.brandToBrandResDTO(brand), HttpStatus.OK);
-        } catch (Exception e) {
+        } catch (CustomErrorException e) {
             throw CustomErrorException.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Marca no encontrada")
-                    .data(e.getMessage())
+                    .status(e.getStatus())
+                    .message(e.getMessage())
+                    .data(e.getStackTrace())
+                    .build();
+        }
+    }
+
+    /*List Brand with Products */
+
+    public ResponseEntity<List<BrandProductResDTO>> getBrandWithProducts() throws CustomErrorException {
+        try {
+            List<Brand> brands = brandRepository.findByIsActive(true);
+            List<BrandProductResDTO> brandProductResDTOS = brandMapper.brandToBrandProductResDTO(brands);
+            return new ResponseEntity<>(brandProductResDTOS, HttpStatus.OK);
+        } catch (CustomErrorException e) {
+            throw CustomErrorException.builder()
+                    .status(e.getStatus())
+                    .message(e.getMessage())
+                    .data(e.getStackTrace())
                     .build();
         }
     }
@@ -54,6 +79,7 @@ public class BrandService {
         try {
             Brand existingBrand = brandRepository.findByBrandNameAndIsActive(brand.getBrandName(), true);
             Brand brandToSave = brandMapper.brandReqDTOToBrand(brand);
+            brandToSave.setActive(true);
             Brand savedBrand = brandRepository.save(brandToSave);
 
             if (existingBrand != null) {
@@ -65,18 +91,25 @@ public class BrandService {
             }
 
             return new ResponseEntity<>(brandMapper.brandToBrandResDTO(savedBrand), HttpStatus.CREATED);
-        } catch (Exception e) {
+        } catch (CustomErrorException e) {
             throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("No se pudo guardar la marca")
-                    .data(e.getMessage())
+                    .status(e.getStatus())
+                    .message(e.getMessage())
+                    .data(e.getStackTrace())
                     .build();
         }
     }
 
     public ResponseEntity<BrandResDTO> updateBrand(Long brandId, BrandReqDto brand) throws CustomErrorException {
         try {
-            Brand brandtoUpdate = brandRepository.findById(brandId).orElseThrow();
+            Brand brandtoUpdate = brandRepository.findByBrandIdAndIsActive(brandId, true);
+            if (brandtoUpdate == null) {
+                throw CustomErrorException.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message("Marca ya eliminada o no encontrada")
+                        .data(brandtoUpdate)
+                        .build();
+            }
             if (brand.getBrandName() == null ) {
                 throw CustomErrorException.builder()
                         .status(HttpStatus.BAD_REQUEST)
@@ -86,21 +119,29 @@ public class BrandService {
                 brandtoUpdate.setBrandName(brand.getBrandName());
                 return new ResponseEntity<>(brandMapper.brandToBrandResDTO(brandRepository.save(brandtoUpdate)), HttpStatus.OK);
 
-        } catch (Exception e) {
+        } catch (CustomErrorException e) {
             throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("No se pudo actualizar la marca")
-                    .data(e.getMessage())
+                    .status(e.getStatus())
+                    .message(e.getMessage())
+                    .data(e.getStackTrace())
                     .build();
         }
     }
 
-    public ResponseEntity<Brand> deleteBrandById(Long brandId) throws CustomErrorException {
+    public ResponseEntity<BrandResDTO> deleteBrandById(Long brandId) throws CustomErrorException {
         try {
-            Brand brand = brandRepository.findById(brandId).orElseThrow();
+            Brand brand = brandRepository.findByBrandIdAndIsActive(brandId, true);
+            if (brand == null) {
+                throw CustomErrorException.builder()
+                        .status(HttpStatus.NOT_FOUND)
+                        .message("Brand not found")
+                        .data(brand)
+                        .build();
+            }
             brand.setActive(false);
-            return new ResponseEntity<>(brandRepository.save(brand), HttpStatus.OK);
-        } catch (Exception e) {
+            BrandResDTO brandResDTO = brandMapper.brandToBrandResDTO(brandRepository.save(brand));
+            return new ResponseEntity<>(brandResDTO, HttpStatus.OK);
+        } catch (CustomErrorException e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)
                     .message("Brand not found")

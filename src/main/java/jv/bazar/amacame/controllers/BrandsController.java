@@ -2,6 +2,7 @@ package jv.bazar.amacame.controllers;
 
 
 import jv.bazar.amacame.dto.req.BrandReqDto;
+import jv.bazar.amacame.dto.res.BrandProductResDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.services.BrandService;
@@ -28,6 +29,11 @@ public class BrandsController {
         return brandService.getBrandById(brandId);
     }
 
+    @GetMapping("/list-with-products/")
+    public  ResponseEntity<List<BrandProductResDTO>> listWithProducts() {
+        return brandService.getBrandWithProducts();
+    }
+
     @PostMapping("/create/")
     public ResponseEntity<BrandResDTO> createBrand(@RequestBody BrandReqDto brand) {
         return brandService.saveBrand(brand);
@@ -36,5 +42,10 @@ public class BrandsController {
     @PutMapping("/update/{brandId}")
     public ResponseEntity<BrandResDTO> updateBrand(@PathVariable Long brandId, @RequestBody BrandReqDto brand) {
         return brandService.updateBrand(brandId, brand);
+    }
+
+    @DeleteMapping("/delete/{brandId}")
+    public ResponseEntity<BrandResDTO> deleteBrand(@PathVariable Long brandId) {
+        return brandService.deleteBrandById(brandId);
     }
 }

@@ -1,19 +1,20 @@
 package jv.bazar.amacame.dto.req;
 
 
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 public class ProductReqDTO implements Serializable {
-        private final Long productId;
-        private final String productName;
-        private final Integer productStock;
-        private final double productPurchasePrice;
-        private final double productSalePrice;
-        private final double productProfit;
-        private final String productBrand;
+        private  Long productId;
+        private  String productName;
+        private  Integer productStock;
+        private BigDecimal productPurchasePrice;
+        private  BigDecimal productSalePrice;
+        private  BrandReqDto productBrand;
 }

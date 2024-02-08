@@ -12,7 +12,7 @@ public class CustomControllerAdvice {
 
     @ExceptionHandler(CustomErrorException.class)
     public ResponseEntity<ErrorResponse> handleCustomDataNotFoundException(Exception e) {
-        HttpStatus status = HttpStatus.NOT_FOUND;
+        HttpStatus status = HttpStatus.BAD_REQUEST;
         ErrorResponse error = ErrorResponse.builder()
                 .status(status)
                 .message(e.getMessage())

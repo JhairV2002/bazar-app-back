@@ -1,6 +1,8 @@
 package jv.bazar.amacame.controllers;
 
 
+import jv.bazar.amacame.dto.req.ProductReqDTO;
+import jv.bazar.amacame.dto.res.ProductResDTO;
 import jv.bazar.amacame.entity.Product;
 import jv.bazar.amacame.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,28 +19,27 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("/list-all/")
-    public ResponseEntity<List<Product>> listAll() {
+    public ResponseEntity<List<ProductResDTO>> listAll() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/list-by-id/{productId}")
-    public ResponseEntity<Product> listById(@PathVariable Long productId) {
+    public ResponseEntity<ProductResDTO> listById(@PathVariable Long productId) {
         return productService.getProductById(productId);
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+    public ResponseEntity<ProductResDTO> createProduct(@RequestBody ProductReqDTO product) {
         return productService.saveProduct(product);
     }
 
     @PutMapping("/update/{productId}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long productId, @RequestBody Product product) {
-        product.setProductId(productId);
+    public ResponseEntity<ProductResDTO> updateProduct(@PathVariable Long productId, @RequestBody ProductReqDTO product) {
         return productService.updateProduct(product);
     }
 
     @DeleteMapping("/delete/{productId}")
-    public ResponseEntity<Product> deleteProduct(@PathVariable Long productId) {
+    public ResponseEntity<ProductResDTO> deleteProduct(@PathVariable Long productId) {
         return productService.deleteProductById(productId);
     }
 }
