@@ -3,10 +3,7 @@ package jv.bazar.amacame.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -20,6 +17,7 @@ import java.time.Instant;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,4 +35,8 @@ public class Product {
     @ManyToOne()
     @JoinColumn(name = "brandId")
     private Brand productBrand;
+
+    public boolean getIsActive(){
+        return this.isActive;
+    }
 }

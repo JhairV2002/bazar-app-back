@@ -84,7 +84,6 @@ public class ProductService {
             }
             Brand brand = brandRepository.findByBrandIdAndIsActive(product.getProductBrand().getBrandId(), true);
 
-
             if (brand == null) {
                 throw CustomErrorException.builder()
                         .status(HttpStatus.BAD_REQUEST)

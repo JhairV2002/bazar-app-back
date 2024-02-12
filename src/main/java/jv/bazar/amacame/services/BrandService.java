@@ -42,11 +42,11 @@ public class BrandService {
     public ResponseEntity<BrandResDTO> getBrandById(Long brandId) throws CustomErrorException {
         try {
             Brand brand = brandRepository.findByBrandIdAndIsActive(brandId, true);
-            if (brand != null){
+            if (brand == null){
                 throw CustomErrorException.builder()
                         .status(HttpStatus.NOT_FOUND)
                         .message("Marca no encontrada")
-                        .data(brand)
+                        .data("Marca no encontrada")
                         .build();
             }
             return new ResponseEntity<>(brandMapper.brandToBrandResDTO(brand), HttpStatus.OK);
