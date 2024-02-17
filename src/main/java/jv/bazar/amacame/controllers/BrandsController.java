@@ -4,6 +4,7 @@ package jv.bazar.amacame.controllers;
 import jv.bazar.amacame.dto.req.BrandReqDto;
 import jv.bazar.amacame.dto.res.BrandProductResDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
+import jv.bazar.amacame.dto.res.ProductsCantByBrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.services.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/brands")
+@CrossOrigin(origins = "http://localhost:3000")
 public class BrandsController {
     @Autowired
     private BrandService brandService;
@@ -32,6 +34,11 @@ public class BrandsController {
     @GetMapping("/list-with-products/")
     public  ResponseEntity<List<BrandProductResDTO>> listWithProducts() {
         return brandService.getBrandWithProducts();
+    }
+
+    @GetMapping("/list-products-cant/")
+    public ResponseEntity<List<ProductsCantByBrandResDTO>> listProductsCant() {
+        return brandService.getProductsCantByBrand();
     }
 
     @PostMapping("/create/")

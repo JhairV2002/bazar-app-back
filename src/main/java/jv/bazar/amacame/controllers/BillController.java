@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/factures")
+@RequestMapping("/bills")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class BillController {
     @Autowired
     private BillService billService;

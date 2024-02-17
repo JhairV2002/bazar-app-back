@@ -24,15 +24,17 @@ public class BillService {
     private BillMapper billMapper;
 
     @Autowired
-    private BillDetailervice billDetailService;
+    private  BillDetailLineService billDetailLineService;
 
     @Autowired
-    private  BillDetailLineService billDetailLineService;
+    private ProductService productService;
 
     public BillResDTO saveBill(BillReqDTO billReqDTO) {
         billReqDTO.getBillDetail().setBillDetailLines(billDetailLineService.calculatePriceAndProfitByProduct(billReqDTO.getBillDetail().getBillDetailLines()));
         billReqDTO.setBillTotal(calculateTotalAmount(billReqDTO));
         billReqDTO.setBillProfit(calculateTotalProfit(billReqDTO));
+        productService.reduceProductStock(billReqDTO.getBillDetail().getBillDetailLines());
+
         return billMapper.billToBillResDTO(billRepository.save(billMapper.billReqDtoToBill(billReqDTO)));
     }
 

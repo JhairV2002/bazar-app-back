@@ -1,5 +1,6 @@
 package jv.bazar.amacame.services;
 
+import jv.bazar.amacame.dto.req.BillDetailLineReqDTO;
 import jv.bazar.amacame.dto.req.ProductReqDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
 import jv.bazar.amacame.dto.res.ProductResDTO;
@@ -169,5 +170,32 @@ public class ProductService {
         BigDecimal productProfit = productSalePrice.subtract(productPurchasePrice);
 
         return productProfit;
+    }
+
+    public void reduceProductStock(Long productId, Long quantity) {
+        Product product = productRepository.findByProductIdAndIsActive(productId, true);
+        if (product == null) {
+            throw CustomErrorException.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message("Producto no encontrado")
+                    .build();
+        }
+
+        if (product.getProductStock() < quantity) {
+            throw CustomErrorException.builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message("No hay suficiente stock")
+                    .build();
+        }
+
+        product.setProductStock(product.getProductStock() - quantity.intValue());
+        productRepository.save(product);
+    }
+
+    public void reduceProductStock(List<BillDetailLineReqDTO> billDetailLineReqDTOList) {
+        for (BillDetailLineReqDTO billDetailLineReqDTO : billDetailLineReqDTOList) {
+            Product product = productRepository.findByProductIdAndIsActive(billDetailLineReqDTO.getProduct().getProductId(), true);
+            reduceProductStock(product.getProductId(), billDetailLineReqDTO.getQuantity());
+        }
     }
 }
