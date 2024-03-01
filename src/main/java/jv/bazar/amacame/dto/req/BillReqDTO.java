@@ -1,6 +1,7 @@
 package jv.bazar.amacame.dto.req;
 
 import jv.bazar.amacame.entity.BillDetail;
+import jv.bazar.amacame.enums.BillStatusEnum;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,4 +21,5 @@ public class BillReqDTO {
     private Boolean isActive;
     private BigDecimal billTotal;
     private BigDecimal billProfit;
+    private BillStatusEnum billStatus;
 }

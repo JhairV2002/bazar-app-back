@@ -10,4 +10,7 @@ services:
     ports:
         - "5432:5432"
     volumes:
-        - /home/helldev/workspace/docker_apps/amacame_db:/var/lib/postgresql/data
+       # - /home/helldev/workspace/docker_apps/amacame_db:/var/lib/postgresql/data // linux
+      - db:/var/lib/postgresql/data
+volumes:
+  db:

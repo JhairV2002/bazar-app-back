@@ -17,6 +17,4 @@ public interface BillMapper {
     BillResDTO billToBillResDTO(Bill bill);
 
     List<BillResDTO> billListToBillResDTOList(List<Bill> billList);
-
-
 }

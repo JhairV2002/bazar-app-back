@@ -37,3 +37,7 @@ build/
 
 ### docker ###
 /docker-compose.yml
+
+### Db volume ###
+
+/db_volume
