@@ -1,7 +1,8 @@
 package jv.bazar.amacame.enums;
 
 public enum PromoTypeEnum {
-    DISCOUNT,
+    DISCOUNTPRODUCT,
+    DISCOUNTBILL,
     SPECIALPROMOS //2X1, 3X2, ETC
 
 }

@@ -1,6 +1,7 @@
 package jv.bazar.amacame.services;
 
-import jv.bazar.amacame.dto.req.PromoReqDTO;
+import jv.bazar.amacame.dto.req.DiscountPromoReqDTO;
+import jv.bazar.amacame.dto.req.SpecialPromoReqDTO;
 import jv.bazar.amacame.dto.res.PromoResDTO;
 import jv.bazar.amacame.mappers.PromosMapper;
 import jv.bazar.amacame.repositories.PromoRepository;
@@ -23,14 +24,14 @@ public class PromoService {
         return new ResponseEntity<>(promosMapper.promosListToPromoResDTOList(promoRepository.findByisActive(true)), HttpStatus.OK);
     }
 
-    public ResponseEntity<PromoResDTO> savePromo(PromoReqDTO promoReqDTO) {
+    public ResponseEntity<PromoResDTO> saveSpecialPromo(SpecialPromoReqDTO promoReqDTO) {
         return new ResponseEntity<>(promosMapper.promosToPromoResDTO(
                 promoRepository.save(promosMapper.promosReqDtoToPromos(promoReqDTO))),
                 HttpStatus.OK
         );
     }
 
-    public ResponseEntity<PromoResDTO> updatePromo(PromoReqDTO promoReqDTO) {
+    public ResponseEntity<PromoResDTO> updatePromo(SpecialPromoReqDTO promoReqDTO) {
         return new ResponseEntity<>(
                 promosMapper.promosToPromoResDTO(
                 promoRepository.save(promosMapper.promosReqDtoToPromos(promoReqDTO))),

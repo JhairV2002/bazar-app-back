@@ -9,6 +9,8 @@ import jv.bazar.amacame.dto.res.BillResDTO;
 import jv.bazar.amacame.entity.Bill;
 import jv.bazar.amacame.enums.BillStatusEnum;
 import jv.bazar.amacame.exceptions.CustomErrorException;
+import jv.bazar.amacame.factory.BillPromoFactory;
+import jv.bazar.amacame.factory.ProductPromoFactory;
 import jv.bazar.amacame.mappers.BillMapper;
 import jv.bazar.amacame.repositories.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,13 @@ public class BillService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private BillPromoFactory billPromoFactory;
+
+    @Autowired
+    private ProductPromoFactory productPromoFactory;
+
+
     public BillResDTO saveBill(BillReqDTO billReqDTO) {
         if (billReqDTO.getBillStatus() == null) {
             throw CustomErrorException.builder()
@@ -43,6 +52,20 @@ public class BillService {
                 billDetailLineService.calculatePriceAndProfitByProduct(
                         billReqDTO.getBillDetail().getBillDetailLines()
                 ));
+
+        //aplicar promociones de factura
+        if (billReqDTO.isHasBillPromo() && billReqDTO.getPromo() != null) {
+            billReqDTO = billPromoFactory.applyBillPromo(billReqDTO.getPromo().getPromoType(), billReqDTO);
+        }
+
+        if (billReqDTO.isHasProductPromo() && billReqDTO.getBillDetail().getBillDetailLines() != null) {
+            assert billReqDTO.getPromo() != null;
+            billReqDTO.getBillDetail().setBillDetailLines(
+                    productPromoFactory.applyProductPromos(
+                            billReqDTO.getBillDetail().getBillDetailLines()
+                    )
+            );
+        }
         billReqDTO.setBillTotal(calculateTotalAmount(billReqDTO));
         billReqDTO.setBillProfit(calculateTotalProfit(billReqDTO));
         productService.reduceProductStock(billReqDTO.getBillDetail().getBillDetailLines());

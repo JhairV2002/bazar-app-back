@@ -26,7 +26,10 @@ public class Bill {
     private BigDecimal billDetailTotal;
     @Enumerated(EnumType.STRING)
     private BillStatusEnum billStatus;
-    private boolean hasPromo;
+    private boolean hasProductPromo;
+    private boolean hasBillPromo;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Promos promo;
     private boolean isActive;
     @CreationTimestamp
     private Instant createdAt;

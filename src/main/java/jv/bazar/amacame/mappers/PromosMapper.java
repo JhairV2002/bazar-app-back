@@ -1,6 +1,6 @@
 package jv.bazar.amacame.mappers;
 
-import jv.bazar.amacame.dto.req.PromoReqDTO;
+import jv.bazar.amacame.dto.req.SpecialPromoReqDTO;
 import jv.bazar.amacame.dto.res.PromoResDTO;
 import jv.bazar.amacame.entity.Promos;
 import org.mapstruct.Mapper;
@@ -16,5 +16,9 @@ public interface PromosMapper {
 
     PromoResDTO promosToPromoResDTO(Promos promos);
 
-    Promos promosReqDtoToPromos(PromoReqDTO promoReqDto);
+    Promos promosReqDtoToPromos(SpecialPromoReqDTO promoReqDto);
+
+    SpecialPromoReqDTO promosToPromoReqDTO(Promos promos);
+
+    List<SpecialPromoReqDTO> promosListToPromoReqDTOList(List<Promos> promosList);
 }

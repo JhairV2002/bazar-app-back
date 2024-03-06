@@ -11,12 +11,14 @@ public class BillDetailLine {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long billDetailLineId;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
     private BigDecimal totalPriceByProduct;
     private BigDecimal totalProfitByProduct;
     private Long quantity;
-
+    private boolean hasPromo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "promo_id")
+    private Promos promo;
 }

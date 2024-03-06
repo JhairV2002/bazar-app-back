@@ -1,4 +1,4 @@
-package jv.bazar.amacame.dto.res;
+package jv.bazar.amacame.dto.req;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,13 +9,11 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PromoResDTO {
+public class DiscountPromoReqDTO {
     private Long promoId;
     private String promoName;
     private String promoDescription;
     private String promoType;
     private String promoScope;
     private BigDecimal promoValue;
-    private Long specialPromoX;
-    private Long specialPromoY;
 }
