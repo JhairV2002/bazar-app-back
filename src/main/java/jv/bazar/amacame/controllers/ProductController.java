@@ -6,6 +6,7 @@ import jv.bazar.amacame.dto.res.ProductResDTO;
 import jv.bazar.amacame.entity.Product;
 import jv.bazar.amacame.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +27,7 @@ public class ProductController {
 
     @GetMapping("/list-by-id/{productId}")
     public ResponseEntity<ProductResDTO> listById(@PathVariable Long productId) {
-        return productService.getProductById(productId);
+        return new ResponseEntity<>(productService.getProductById(productId), HttpStatus.OK);
     }
 
     @PostMapping("/create/")

@@ -24,5 +24,5 @@ public class BillReqDTO {
     private boolean hasProductPromo;
     private boolean hasBillPromo;
     private PromoTypeEnum promoType;
-    private SpecialPromoReqDTO promo;
+    private PromoReqDTO promo;
 }

@@ -55,17 +55,9 @@ public class BillService {
 
         //aplicar promociones de factura
         if (billReqDTO.isHasBillPromo() && billReqDTO.getPromo() != null) {
-            billReqDTO = billPromoFactory.applyBillPromo(billReqDTO.getPromo().getPromoType(), billReqDTO);
+            billReqDTO = billPromoFactory.applyBillPromo(billReqDTO.getPromo().getPromoType().name(), billReqDTO);
         }
 
-        if (billReqDTO.isHasProductPromo() && billReqDTO.getBillDetail().getBillDetailLines() != null) {
-            assert billReqDTO.getPromo() != null;
-            billReqDTO.getBillDetail().setBillDetailLines(
-                    productPromoFactory.applyProductPromos(
-                            billReqDTO.getBillDetail().getBillDetailLines()
-                    )
-            );
-        }
         billReqDTO.setBillTotal(calculateTotalAmount(billReqDTO));
         billReqDTO.setBillProfit(calculateTotalProfit(billReqDTO));
         productService.reduceProductStock(billReqDTO.getBillDetail().getBillDetailLines());
@@ -99,6 +91,7 @@ public class BillService {
     }
 
     public BigDecimal calculateTotalAmount(BillReqDTO billReqDTO) {
+
         List<BillDetailLineReqDTO> billDetailLine = billReqDTO.getBillDetail().getBillDetailLines();
         BigDecimal totalAmount = new BigDecimal(0);
         BigDecimal totalByProduct;

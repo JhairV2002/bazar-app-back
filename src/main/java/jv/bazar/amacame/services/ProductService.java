@@ -51,18 +51,13 @@ public class ProductService {
     }
 
     /* List product by id*/
-    public ResponseEntity<ProductResDTO> getProductById(Long productId) throws CustomErrorException {
+    public ProductResDTO getProductById(Long productId) throws CustomErrorException {
         try {
             Product product = productRepository.findByProductIdAndIsActive(productId, true);
             if (product == null) {
-                throw CustomErrorException.builder()
-                        .status(HttpStatus.NOT_FOUND)
-                        .message("Producto no encontrado")
-                        .data(product)
-                        .build();
+                throw new Exception("Producto no encontrado");
             }
-            ProductResDTO productResDTO = productMapper.productToProductResDTO(product);
-            return new ResponseEntity<>(productResDTO, HttpStatus.OK);
+            return productMapper.productToProductResDTO(product);
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)

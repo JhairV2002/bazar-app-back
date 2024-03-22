@@ -1,5 +1,7 @@
 package jv.bazar.amacame.dto.res;
 
+import jv.bazar.amacame.enums.PromoScopeEnum;
+import jv.bazar.amacame.enums.PromoTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,8 @@ public class PromoResDTO {
     private Long promoId;
     private String promoName;
     private String promoDescription;
-    private String promoType;
-    private String promoScope;
+    private PromoTypeEnum promoType;
+    private PromoScopeEnum promoScope;
     private BigDecimal promoValue;
     private Long specialPromoX;
     private Long specialPromoY;

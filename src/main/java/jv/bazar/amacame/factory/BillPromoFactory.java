@@ -19,6 +19,4 @@ public class BillPromoFactory {
         promo = beanFactory.getBean(promoType, IBillPromo.class);
         return promo.applyBillPromo(bill);
     }
-
-
 }

@@ -1,9 +1,12 @@
 package jv.bazar.amacame.factory;
 
 import jv.bazar.amacame.dto.req.BillDetailLineReqDTO;
+import jv.bazar.amacame.dto.req.PromoReqDTO;
+import jv.bazar.amacame.dto.res.PromoResDTO;
 
-import java.util.List;
+import java.math.BigDecimal;
+
 
 public interface IProductPromo {
-    BillDetailLineReqDTO applyPromo(BillDetailLineReqDTO billDetailLines);
+    BigDecimal applyPromo(BigDecimal amountToDiscount, PromoResDTO promo, Long quantity);
 }

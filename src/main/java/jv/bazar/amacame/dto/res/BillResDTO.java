@@ -17,6 +17,7 @@ public class BillResDTO {
     private Date billDate;
     private String billDescription;
     private BigDecimal billTotal;
+    private BigDecimal billProfit;
     private BillDetailResDTO billDetail;
     private BillStatusEnum billStatus;
 }
