@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 public class ProductsCantByBrandResDTO implements Serializable {
+    private Long brandId;
     private String brandName;
     private int cantProducts;
 }

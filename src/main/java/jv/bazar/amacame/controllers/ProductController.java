@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/products")
 public class ProductController {
     @Autowired
     private ProductService productService;
 
+//    @GetMapping("/list-all/")
+//    public ResponseEntity<List<ProductResDTO>> listAll() {
+//        return productService.getAllProducts();
+//    }
+
     @GetMapping("/list-all/")
-    public ResponseEntity<List<ProductResDTO>> listAll() {
-        return productService.getAllProducts();
+    public ResponseEntity<String> listAll() {
+        return new ResponseEntity<>("Hello World", HttpStatus.OK);
     }
 
     @GetMapping("/list-by-id/{productId}")

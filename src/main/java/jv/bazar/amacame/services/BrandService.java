@@ -3,6 +3,7 @@ package jv.bazar.amacame.services;
 import jv.bazar.amacame.dto.req.BrandReqDto;
 import jv.bazar.amacame.dto.res.BrandProductResDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
 import jv.bazar.amacame.dto.res.ProductsCantByBrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.exceptions.CustomErrorException;
@@ -85,6 +86,7 @@ public class BrandService {
         List<BrandProductResDTO> brandProductResDTOS = brandMapper.brandToBrandProductResDTO(brands);
         for (BrandProductResDTO brandProductResDTO : brandProductResDTOS) {
             productsCantByBrandResDTOS.add(ProductsCantByBrandResDTO.builder()
+                    .brandId(brandProductResDTO.getBrandId())
                     .brandName(brandProductResDTO.getBrandName())
                     .cantProducts(brandProductResDTO.getProducts().size())
                     .build());
@@ -99,13 +101,9 @@ public class BrandService {
         }
     }
 
-    public ResponseEntity<BrandResDTO> saveBrand(BrandReqDto brand) throws CustomErrorException {
+    public GenericResponseDTO<BrandResDTO> saveBrand(BrandReqDto brand) throws CustomErrorException {
         try {
             Brand existingBrand = brandRepository.findByBrandNameAndIsActive(brand.getBrandName(), true);
-            Brand brandToSave = brandMapper.brandReqDTOToBrand(brand);
-            brandToSave.setActive(true);
-            Brand savedBrand = brandRepository.save(brandToSave);
-
             if (existingBrand != null) {
                 throw CustomErrorException.builder()
                         .status(HttpStatus.BAD_REQUEST)
@@ -114,12 +112,28 @@ public class BrandService {
                         .build();
             }
 
-            return new ResponseEntity<>(brandMapper.brandToBrandResDTO(savedBrand), HttpStatus.CREATED);
+            if(brand.getBrandName().isEmpty()){
+                throw CustomErrorException.builder()
+                        .status(HttpStatus.BAD_REQUEST)
+                        .message("El nombre de la marca no puede estar vacío")
+                        .build();
+            }
+            Brand brandToSave = brandMapper.brandReqDTOToBrand(brand);
+            brandToSave.setActive(true);
+            Brand savedBrand = brandRepository.save(brandToSave);
+
+            return GenericResponseDTO.<BrandResDTO>builder()
+                    .code(HttpStatus.CREATED.value())
+                    .message("Marca creada exitosamente")
+                    .data(brandMapper.brandToBrandResDTO(savedBrand))
+                    .status(HttpStatus.CREATED)
+                    .build();
+
         } catch (CustomErrorException e) {
             throw CustomErrorException.builder()
                     .status(e.getStatus())
                     .message(e.getMessage())
-                    .data(e.getStackTrace())
+                    .data(e.getData())
                     .build();
         }
     }

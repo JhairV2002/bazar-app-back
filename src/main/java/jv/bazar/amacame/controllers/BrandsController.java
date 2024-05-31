@@ -4,6 +4,7 @@ package jv.bazar.amacame.controllers;
 import jv.bazar.amacame.dto.req.BrandReqDto;
 import jv.bazar.amacame.dto.res.BrandProductResDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
 import jv.bazar.amacame.dto.res.ProductsCantByBrandResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.services.BrandService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/brands")
 @CrossOrigin(origins = "http://localhost:3000")
 public class BrandsController {
@@ -42,7 +43,7 @@ public class BrandsController {
     }
 
     @PostMapping("/create/")
-    public ResponseEntity<BrandResDTO> createBrand(@RequestBody BrandReqDto brand) {
+    public GenericResponseDTO<BrandResDTO> createBrand(@RequestBody BrandReqDto brand) {
         return brandService.saveBrand(brand);
     }
 
