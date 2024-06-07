@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import static jv.bazar.amacame.cons.SecurityConstants.PROTECTED_URLS;
 import static jv.bazar.amacame.cons.SecurityConstants.WHITE_LIST_URLS;
 
 @Configuration
@@ -30,13 +31,15 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(req -> {
-                            req.requestMatchers( "/auth/**").permitAll();
-                            req.requestMatchers(HttpMethod.GET, "/brands/list-all/").hasAnyRole(RoleEnum.ADMIN.name());
-                            req.anyRequest().denyAll();
-                        }
+                    req.requestMatchers( "/auth/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET,  "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.POST, "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.PUT, "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.anyRequest().denyAll();
+                     }
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(new JwtTokenValidatorFilter(jwtUtils), BasicAuthenticationFilter.class)

@@ -88,7 +88,7 @@ public class JwtUtils {
                     .build();
 
             String existingUnactiveToken = authenticationTokenRepository.findByTokenAndIsActive(token, Boolean.TRUE).getToken();
-            if (!existingUnactiveToken.equals(token)){
+            if (!existingUnactiveToken.equals(token) && !existingUnactiveToken.isEmpty()){
                 throw new JWTVerificationException("Token no válido");
             }
             return verifier.verify(token);

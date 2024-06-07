@@ -20,14 +20,9 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-//    @GetMapping("/list-all/")
-//    public ResponseEntity<List<ProductResDTO>> listAll() {
-//        return productService.getAllProducts();
-//    }
-
     @GetMapping("/list-all/")
-    public ResponseEntity<String> listAll() {
-        return new ResponseEntity<>("Hello World", HttpStatus.OK);
+    public ResponseEntity<List<ProductResDTO>> listAll() {
+        return productService.getAllProducts();
     }
 
     @GetMapping("/list-by-id/{productId}")
