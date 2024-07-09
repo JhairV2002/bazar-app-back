@@ -64,21 +64,27 @@ public class BrandService {
 
     /*List Brand with Products */
 
-    public ResponseEntity<List<BrandProductResDTO>> getBrandWithProducts() throws CustomErrorException {
+    public GenericResponseDTO<List<BrandProductResDTO>> getBrandWithProducts() throws CustomErrorException {
         try {
             List<Brand> brands = brandRepository.findByIsActive(true);
             List<BrandProductResDTO> brandProductResDTOS = brandMapper.brandToBrandProductResDTO(brands);
-            return new ResponseEntity<>(brandProductResDTOS, HttpStatus.OK);
+            return  GenericResponseDTO.<List<BrandProductResDTO>>builder()
+                    .code(HttpStatus.OK.value())
+                    .message("Transacción exitosa")
+                    .data(brandProductResDTOS)
+                    .status(HttpStatus.OK)
+                    .build();
         } catch (CustomErrorException e) {
-            throw CustomErrorException.builder()
+            return  GenericResponseDTO.<List<BrandProductResDTO>>builder()
                     .status(e.getStatus())
+                    .code(e.getStatus().value())
                     .message(e.getMessage())
-                    .data(e.getStackTrace())
+                    .data(null)
                     .build();
         }
     }
 
-    public ResponseEntity<List<ProductsCantByBrandResDTO>> getProductsCantByBrand() throws CustomErrorException {
+    public GenericResponseDTO<List<ProductsCantByBrandResDTO>> getProductsCantByBrand() throws CustomErrorException {
         try{
 
         List<ProductsCantByBrandResDTO> productsCantByBrandResDTOS = new ArrayList<>();
@@ -91,12 +97,18 @@ public class BrandService {
                     .cantProducts(brandProductResDTO.getProducts().size())
                     .build());
         }
-        return new ResponseEntity<>(productsCantByBrandResDTOS, HttpStatus.OK);
+        return GenericResponseDTO.<List<ProductsCantByBrandResDTO>>builder()
+                .code(HttpStatus.OK.value())
+                .message("Transacción exitosa")
+                .data(productsCantByBrandResDTOS)
+                .status(HttpStatus.OK)
+                .build();
         } catch (CustomErrorException e) {
-            throw CustomErrorException.builder()
+            return GenericResponseDTO.<List<ProductsCantByBrandResDTO>>builder()
                     .status(e.getStatus())
+                    .code(e.getStatus().value())
                     .message(e.getMessage())
-                    .data(e.getStackTrace())
+                    .data(null)
                     .build();
         }
     }
@@ -130,10 +142,11 @@ public class BrandService {
                     .build();
 
         } catch (CustomErrorException e) {
-            throw CustomErrorException.builder()
+            return GenericResponseDTO.<BrandResDTO>builder()
                     .status(e.getStatus())
+                    .code(e.getStatus().value())
                     .message(e.getMessage())
-                    .data(e.getData())
+                    .data(null)
                     .build();
         }
     }

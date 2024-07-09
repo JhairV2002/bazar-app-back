@@ -4,6 +4,7 @@ import jv.bazar.amacame.config.filter.JwtTokenValidatorFilter;
 import jv.bazar.amacame.enums.RoleEnum;
 import jv.bazar.amacame.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,12 +13,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import static jv.bazar.amacame.cons.SecurityConstants.PROTECTED_URLS;
-import static jv.bazar.amacame.cons.SecurityConstants.WHITE_LIST_URLS;
 
 @Configuration
 @EnableWebSecurity
@@ -25,7 +26,8 @@ import static jv.bazar.amacame.cons.SecurityConstants.WHITE_LIST_URLS;
 public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
     private final JwtUtils jwtUtils;
-
+    @Qualifier("customAccessDeniedHandler")
+    private final CustomAccessDeniedHandler accessDeniedHandler;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -43,6 +45,9 @@ public class SecurityConfiguration {
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(new JwtTokenValidatorFilter(jwtUtils), BasicAuthenticationFilter.class)
+                .exceptionHandling(e ->
+                    e.authenticationEntryPoint(accessDeniedHandler)
+                )
                 .build();
     }
 }

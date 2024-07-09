@@ -5,8 +5,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
+import jv.bazar.amacame.exceptions.CustomErrorException;
 import jv.bazar.amacame.utils.JwtUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +33,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        try {
         String jwtToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (jwtToken != null && jwtToken.startsWith("Bearer ")) {
             jwtToken = jwtToken.replace("Bearer ", "");
@@ -47,5 +51,12 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
             SecurityContextHolder.setContext(context);
         }
         filterChain.doFilter(request, response);
+        }catch (Exception e){
+           throw  CustomErrorException.builder()
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message("No autorizado")
+                    .data(e.getMessage())
+                    .build();
+        }
     }
 }

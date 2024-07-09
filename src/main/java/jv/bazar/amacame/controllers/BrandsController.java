@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/brands")
-@CrossOrigin(origins = "http://localhost:3000/")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class BrandsController {
     @Autowired
     private BrandService brandService;
@@ -33,12 +33,12 @@ public class BrandsController {
     }
 
     @GetMapping("/list-with-products/")
-    public  ResponseEntity<List<BrandProductResDTO>> listWithProducts() {
+    public GenericResponseDTO<List<BrandProductResDTO>> listWithProducts() {
         return brandService.getBrandWithProducts();
     }
 
     @GetMapping("/list-with-products-cant/")
-    public ResponseEntity<List<ProductsCantByBrandResDTO>> listProductsCant() {
+    public GenericResponseDTO<List<ProductsCantByBrandResDTO>> listProductsCant() {
         return brandService.getProductsCantByBrand();
     }
 
