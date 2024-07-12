@@ -11,21 +11,6 @@ services:
         - "5432:5432"
     volumes:
        # - /home/helldev/workspace/docker_apps/amacame_db:/var/lib/postgresql/data // linux
-      - db:/var/lib/postgresql/data
-  users_db:
-    image: redis:latest
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-        - users_db:/root/redis
-        - users_db_redis_conf:/usr/local/etc/redis/redis.conf
-    environment:
-      - REDIS_PASSWORD=redis
-      - REDIS_PORT=6379
-      - REDIS_DATABASE=1
-
+      - db_data:/var/lib/postgresql/data
 volumes:
-    db:
-    users_db:
-    users_db_redis_conf:
+    db_data:
