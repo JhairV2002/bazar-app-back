@@ -1,5 +1,7 @@
 package jv.bazar.amacame.config;
 
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
+import jv.bazar.amacame.entity.User;
 import jv.bazar.amacame.exceptions.CustomErrorException;
 import jv.bazar.amacame.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Optional;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -27,13 +31,14 @@ public class ApplicationConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> userRepository.findByEmail(username)
-                .orElseThrow(() ->  CustomErrorException.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("No se ha encontrado el usuario con el email: " + username)
-                    .data(null)
-                    .build()
-                );
+            return username -> userRepository.findByEmail(username)
+                    .orElseThrow(() ->  CustomErrorException.builder()
+                            .status(HttpStatus.NOT_FOUND)
+                            .message("No se ha encontrado el usuario con el email: " + username)
+                            .data(null)
+                            .build()
+                    );
+
     }
 
     @Bean

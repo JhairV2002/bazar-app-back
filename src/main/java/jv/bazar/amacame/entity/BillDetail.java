@@ -1,6 +1,7 @@
 package jv.bazar.amacame.entity;
 
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(schema = SchemaNamesConstants.BILLING_SCHEMA)
 public class BillDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

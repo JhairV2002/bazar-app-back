@@ -1,11 +1,13 @@
 package jv.bazar.amacame.entity;
 
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import lombok.*;
 
 import java.sql.Timestamp;
 
 @Entity
+@Table(schema = SchemaNamesConstants.AUTHENTICATION_SCHEMA)
 @Builder
 @Data
 @AllArgsConstructor

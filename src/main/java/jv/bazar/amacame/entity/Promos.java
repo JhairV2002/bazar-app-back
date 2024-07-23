@@ -1,6 +1,7 @@
 package jv.bazar.amacame.entity;
 
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import jv.bazar.amacame.enums.PromoScopeEnum;
 import jv.bazar.amacame.enums.PromoTypeEnum;
 import lombok.Data;
@@ -12,6 +13,7 @@ import java.time.Instant;
 
 @Data
 @Entity
+@Table(schema = SchemaNamesConstants.PROMOTION_SCHEMA)
 public class Promos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

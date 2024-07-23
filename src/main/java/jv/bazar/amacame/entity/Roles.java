@@ -2,6 +2,7 @@ package jv.bazar.amacame.entity;
 
 
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import jv.bazar.amacame.enums.RoleEnum;
 import lombok.Data;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Table(name = "roles")
+@Table(name = "roles", schema = SchemaNamesConstants.AUTHENTICATION_SCHEMA)
 public class Roles implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

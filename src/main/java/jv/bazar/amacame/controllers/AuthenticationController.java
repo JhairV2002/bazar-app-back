@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class AuthenticationController {
 
@@ -19,12 +20,22 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public GenericResponseDTO<AuthLoginResponseDTO> login(@RequestBody AuthLoginRequestDTO loginRequest) {
-        return GenericResponseDTO.<AuthLoginResponseDTO>builder()
-                .code(HttpStatus.OK.value())
-                .status(HttpStatus.OK)
-                .message("Login successful")
-                .data(userService.loginUser(loginRequest))
-                .build();
+        try {
+            return GenericResponseDTO.<AuthLoginResponseDTO>builder()
+                    .code(HttpStatus.OK.value())
+                    .status(HttpStatus.OK)
+                    .message("Sesión iniciada correctamente")
+                    .data(userService.loginUser(loginRequest))
+                    .build();
+        } catch (Exception e) {
+            return GenericResponseDTO.<AuthLoginResponseDTO>builder()
+                    .code(HttpStatus.UNAUTHORIZED.value())
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .message(e.getMessage())
+                    .data(null)
+                    .build();
+        }
+
     }
 
     @PostMapping("/logout")

@@ -3,6 +3,7 @@ package jv.bazar.amacame.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(schema = SchemaNamesConstants.PRODUCT_SCHEMA)
 public class Brand {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,6 +1,7 @@
 package jv.bazar.amacame.entity;
 
 import jakarta.persistence.*;
+import jv.bazar.amacame.cons.SchemaNamesConstants;
 import lombok.*;
 
 import java.io.Serializable;
@@ -12,7 +13,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "permissions")
+@Table(name = "permissions", schema = SchemaNamesConstants.AUTHENTICATION_SCHEMA)
 public class Permissions implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
