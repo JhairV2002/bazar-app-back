@@ -25,12 +25,13 @@ public class AuthenticationTokenService {
 
     public void invalidateToken(String token) {
         AuthenticationToken authenticationToken = authenticationTokenRepository
-                .findByTokenAndIsActive(token.replace("Bearer ", ""), true);
+                .findByTokenAndIsActive(token, true);
         if (authenticationToken == null) {
             throw new RuntimeException("Token no encontrado");
         }
         authenticationToken.setActive(false);
         authenticationTokenRepository.save(authenticationToken);
+
     }
 
 

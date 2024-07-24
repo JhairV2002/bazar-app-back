@@ -1,6 +1,8 @@
 package jv.bazar.amacame.services;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jv.bazar.amacame.config.ApplicationConfig;
+import jv.bazar.amacame.cons.SecurityConstants;
 import jv.bazar.amacame.dto.req.AuthLoginRequestDTO;
 import jv.bazar.amacame.dto.req.SignUpUserReqDTO;
 import jv.bazar.amacame.dto.res.AuthLoginResponseDTO;
@@ -12,6 +14,7 @@ import jv.bazar.amacame.exceptions.CustomErrorException;
 import jv.bazar.amacame.mappers.UsersMapper;
 import jv.bazar.amacame.repositories.RolesRepository;
 import jv.bazar.amacame.repositories.UserRepository;
+import jv.bazar.amacame.utils.CookieUtils;
 import jv.bazar.amacame.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -36,8 +39,9 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final ApplicationConfig applicationConfig;
     private final PasswordEncoder passwordEncoder;
+    private final CookieUtils cookieUtils;
 
-    public GenericResponseDTO<AuthLoginResponseDTO> createUser(SignUpUserReqDTO signUpUserReqDTO) throws CustomErrorException {
+    public GenericResponseDTO<String> createUser(SignUpUserReqDTO signUpUserReqDTO) throws CustomErrorException {
         if (userRepository.findByEmail(signUpUserReqDTO.getEmail()).isPresent()) {
             throw  CustomErrorException.builder()
                     .status(HttpStatus.CONFLICT)
@@ -71,13 +75,8 @@ public class UserService {
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(createdUser.getEmail(), null, authorities);
 
-            return GenericResponseDTO.<AuthLoginResponseDTO>builder().code(201).message("Usuario creado y logueado con éxito").data(
-                    new AuthLoginResponseDTO(
-                            createdUser.getEmail(),
-                            "Usuario creado y logueado con éxito",
-                            jwtUtils.createToken(authentication),
-                            true
-                    )
+            return GenericResponseDTO.<String>builder().code(201).message("Usuario creado y logueado con éxito").data(
+                    null
             ).status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             throw  CustomErrorException.builder()
@@ -88,19 +87,21 @@ public class UserService {
         }
     }
 
-    public AuthLoginResponseDTO loginUser(AuthLoginRequestDTO authLoginRequestDTO){
+    public void loginUser(AuthLoginRequestDTO authLoginRequestDTO, HttpServletResponse response) {
+        try {
         String username = authLoginRequestDTO.username();
         String password = authLoginRequestDTO.password();
-
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String accessToken = jwtUtils.createToken(authentication);
-        return new AuthLoginResponseDTO(
-                username,
-                "Sesion iniciada correctamente",
-                accessToken,
-                true);
+        String token =  jwtUtils.createToken(authentication);
+        cookieUtils.createCookie("jwtToken", token, SecurityConstants.JWT_EXPIRATION, response);
+        } catch (Exception e) {
+            throw  CustomErrorException.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message("Error al iniciar sesión")
+                    .data(Map.of("error", e.getMessage()))
+                    .build();
+        }
     }
 
     public Authentication authenticate(String username, String password) {
