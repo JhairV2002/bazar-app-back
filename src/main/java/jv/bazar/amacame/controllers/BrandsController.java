@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/brands")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "http://localhost:4200/*", allowCredentials = "true")
 public class BrandsController {
     @Autowired
     private BrandService brandService;

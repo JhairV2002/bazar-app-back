@@ -12,8 +12,12 @@ public class CookieUtils {
                 .maxAge(maxAge)
                 .httpOnly(true)
                 .path("/")
+                .secure(true)
+                .domain("localhost")
                 .build();
         response.setHeader("Set-Cookie", responseCookie.toString());
+        response.setHeader("Access-Control-Allow-Credentials", "true");
+
     }
 
     public void deleteCookie(String name, HttpServletResponse response) {

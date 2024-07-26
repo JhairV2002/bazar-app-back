@@ -16,7 +16,7 @@ public class DefaultExceptionHandler extends ResponseEntityExceptionHandler {
     public GenericResponseDTO<?> handleAuthenticationException(AuthenticationException e) {
         return GenericResponseDTO.builder()
                 .status(HttpStatus.UNAUTHORIZED)
-                .message("No autorizado")
+                .message("Authentication Exeption" + e.getMessage())
                 .data(e.getMessage())
                 .build();
     }
