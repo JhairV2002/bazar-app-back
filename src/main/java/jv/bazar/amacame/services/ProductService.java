@@ -3,6 +3,7 @@ package jv.bazar.amacame.services;
 import jv.bazar.amacame.dto.req.BillDetailLineReqDTO;
 import jv.bazar.amacame.dto.req.ProductReqDTO;
 import jv.bazar.amacame.dto.res.BrandResDTO;
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
 import jv.bazar.amacame.dto.res.ProductResDTO;
 import jv.bazar.amacame.entity.Brand;
 import jv.bazar.amacame.entity.Product;
@@ -35,12 +36,17 @@ public class ProductService {
 
 
     /* List All Products*/
-    public ResponseEntity<List<ProductResDTO>> getAllProducts() throws CustomErrorException {
+    public GenericResponseDTO<List<ProductResDTO>> getAllProducts() throws CustomErrorException {
         try {
             List<Product> products = productRepository.findByIsActiveAndProductBrand_isActive(true, true);
             List<ProductResDTO> productResDTOS = productMapper.productToProductResDTO(products);
 
-            return new ResponseEntity<>(productResDTOS, HttpStatus.OK);
+            return  GenericResponseDTO.<List<ProductResDTO>>builder()
+                    .status(HttpStatus.OK)
+                    .message("Transaccion exitosa")
+                    .data(productResDTOS)
+                    .code(HttpStatus.OK.value())
+                    .build();
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)
@@ -51,13 +57,18 @@ public class ProductService {
     }
 
     /* List product by id*/
-    public ProductResDTO getProductById(Long productId) throws CustomErrorException {
+    public GenericResponseDTO<ProductResDTO> getProductById(Long productId) throws CustomErrorException {
         try {
             Product product = productRepository.findByProductIdAndIsActive(productId, true);
             if (product == null) {
                 throw new Exception("Producto no encontrado");
             }
-            return productMapper.productToProductResDTO(product);
+            return GenericResponseDTO.<ProductResDTO>builder()
+                    .status(HttpStatus.OK)
+                    .message("Transaccion exitosa")
+                    .data(productMapper.productToProductResDTO(product))
+                    .code(HttpStatus.OK.value())
+                    .build();
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)
@@ -69,7 +80,7 @@ public class ProductService {
 
     /* Save product*/
 
-    public ResponseEntity<ProductResDTO> saveProduct(ProductReqDTO product) throws CustomErrorException {
+    public GenericResponseDTO<ProductResDTO> saveProduct(ProductReqDTO product) throws CustomErrorException {
         try {
             /* Validate brand */
             if (product.getProductBrand() == null) {
@@ -96,7 +107,12 @@ public class ProductService {
             productToSave.setProductProfit(productProfit);
 
             Product savedProduct = productRepository.save(productToSave);
-            return new ResponseEntity<>(productMapper.productToProductResDTO(savedProduct), HttpStatus.CREATED);
+            return GenericResponseDTO.<ProductResDTO>builder()
+                    .status(HttpStatus.CREATED)
+                    .message("Producto creado con éxito")
+                    .data(productMapper.productToProductResDTO(savedProduct))
+                    .code(HttpStatus.CREATED.value())
+                    .build();
 
         } catch (Exception e) {
             throw CustomErrorException.builder()
@@ -108,7 +124,7 @@ public class ProductService {
     }
 
     /* Update product*/
-    public ResponseEntity<ProductResDTO> updateProduct(ProductReqDTO product) throws CustomErrorException {
+    public GenericResponseDTO<ProductResDTO> updateProduct(ProductReqDTO product) throws CustomErrorException {
         try {
             BigDecimal productProfit = calculateProductProfit(product.getProductSalePrice(), product.getProductPurchasePrice());
             Product existingProduct = productRepository.findById(product.getProductId()).orElseThrow();
@@ -119,7 +135,12 @@ public class ProductService {
             existingProduct.setProductProfit(productProfit);
             existingProduct.setProductBrand(brandMapper.brandReqDTOToBrand(product.getProductBrand()));
             Product savedProduct = productRepository.save(existingProduct);
-            return new ResponseEntity<>(productMapper.productToProductResDTO(savedProduct), HttpStatus.OK);
+            return GenericResponseDTO.<ProductResDTO>builder()
+                    .status(HttpStatus.OK)
+                    .message("Producto actualizado con éxito")
+                    .data(productMapper.productToProductResDTO(savedProduct))
+                    .code(HttpStatus.OK.value())
+                    .build();
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.BAD_REQUEST)
@@ -130,12 +151,17 @@ public class ProductService {
     }
 
     /* Delete product by id*/
-    public ResponseEntity<ProductResDTO> deleteProductById(Long productId) throws CustomErrorException {
+    public GenericResponseDTO<ProductResDTO> deleteProductById(Long productId) throws CustomErrorException {
         try {
             Product product = productRepository.findById(productId).orElseThrow();
             product.setActive(false);
             Product savedProduct = productRepository.save(product);
-            return new ResponseEntity<>(productMapper.productToProductResDTO(savedProduct), HttpStatus.OK);
+            return GenericResponseDTO.<ProductResDTO>builder()
+                    .status(HttpStatus.OK)
+                    .message("Producto eliminado con éxito")
+                    .data(productMapper.productToProductResDTO(savedProduct))
+                    .code(HttpStatus.OK.value())
+                    .build();
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.NOT_FOUND)

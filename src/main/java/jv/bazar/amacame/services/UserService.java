@@ -94,7 +94,7 @@ public class UserService {
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token =  jwtUtils.createToken(authentication);
-        cookieUtils.createCookie("jwtToken", token, SecurityConstants.JWT_EXPIRATION, response);
+        cookieUtils.createCookie("jwtToken", token, SecurityConstants.JWT_EXPIRATION_COOKIE_DAY_SECONDS, response);
         } catch (Exception e) {
             throw  CustomErrorException.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
