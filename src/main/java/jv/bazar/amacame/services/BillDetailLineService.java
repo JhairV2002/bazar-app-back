@@ -30,7 +30,7 @@ public class BillDetailLineService {
 
     public BigDecimal calculateTotalPriceByProduct(BillDetailLineReqDTO billDetailLineReqDTO) {
         try{
-            ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId());
+            ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId()).getData();
             BigDecimal totalPrice = product.getProductSalePrice().multiply(BigDecimal.valueOf(billDetailLineReqDTO.getQuantity()));
             // validates if any promo is applied
             if (billDetailLineReqDTO.getHasPromo() &&  billDetailLineReqDTO.getPromo() != null) {
@@ -45,7 +45,7 @@ public class BillDetailLineService {
 
     public BigDecimal calculateTotalProfitByProduct(BillDetailLineReqDTO billDetailLineReqDTO) {
         try {
-            ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId());
+            ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId()).getData();
             BigDecimal totalProfit = product.getProductProfit().multiply(BigDecimal.valueOf(billDetailLineReqDTO.getQuantity()));
             // validates if any promo is applied
             if (billDetailLineReqDTO.getHasPromo() &&  billDetailLineReqDTO.getPromo() != null) {

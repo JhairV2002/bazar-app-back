@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -39,6 +40,7 @@ public class ProductService {
     public GenericResponseDTO<List<ProductResDTO>> getAllProducts() throws CustomErrorException {
         try {
             List<Product> products = productRepository.findByIsActiveAndProductBrand_isActive(true, true);
+            products.sort(Comparator.comparing(Product::getProductId));
             List<ProductResDTO> productResDTOS = productMapper.productToProductResDTO(products);
 
             return  GenericResponseDTO.<List<ProductResDTO>>builder()

@@ -4,8 +4,10 @@ package jv.bazar.amacame.controllers;
 import jv.bazar.amacame.dto.req.ProductReqDTO;
 import jv.bazar.amacame.dto.res.GenericResponseDTO;
 import jv.bazar.amacame.dto.res.ProductResDTO;
+import jv.bazar.amacame.exceptions.CustomErrorException;
 import jv.bazar.amacame.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +31,17 @@ public class ProductController {
 
     @PostMapping("/create/")
     public GenericResponseDTO<ProductResDTO> createProduct(@RequestBody ProductReqDTO product) {
-        return productService.saveProduct(product);
+        try {
+            return productService.saveProduct(product);
+
+        } catch (CustomErrorException e) {
+            return GenericResponseDTO.<ProductResDTO>builder()
+                    .status(HttpStatus.BAD_REQUEST)
+                    .message(e.getMessage())
+                    .data(null)
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .build();
+        }
     }
 
     @PutMapping("/update/{productId}")
