@@ -32,11 +32,6 @@ public class BillDetailLineService {
         try{
             ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId()).getData();
             BigDecimal totalPrice = product.getProductSalePrice().multiply(BigDecimal.valueOf(billDetailLineReqDTO.getQuantity()));
-            // validates if any promo is applied
-            if (billDetailLineReqDTO.getHasPromo() &&  billDetailLineReqDTO.getPromo() != null) {
-                IProductPromo promo = productPromoFactory.getPromo(billDetailLineReqDTO.getPromo().getPromoType().name());
-                totalPrice = promo.applyPromo(totalPrice, billDetailLineReqDTO.getPromo(), billDetailLineReqDTO.getQuantity());
-            }
             return totalPrice;
         } catch (Exception e) {
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "El producto no existe", e.getMessage());
@@ -48,10 +43,6 @@ public class BillDetailLineService {
             ProductResDTO product = productService.getProductById(billDetailLineReqDTO.getProduct().getProductId()).getData();
             BigDecimal totalProfit = product.getProductProfit().multiply(BigDecimal.valueOf(billDetailLineReqDTO.getQuantity()));
             // validates if any promo is applied
-            if (billDetailLineReqDTO.getHasPromo() &&  billDetailLineReqDTO.getPromo() != null) {
-                IProductPromo promo = productPromoFactory.getPromo(billDetailLineReqDTO.getPromo().getPromoType().name());
-                totalProfit = promo.applyPromo(totalProfit, billDetailLineReqDTO.getPromo(), billDetailLineReqDTO.getQuantity());
-            }
             return totalProfit;
         } catch (Exception e) {
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, e.getMessage(), e.getMessage());

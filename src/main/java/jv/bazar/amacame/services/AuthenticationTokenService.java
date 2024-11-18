@@ -26,7 +26,7 @@ public class AuthenticationTokenService {
     public void invalidateToken(String token) {
         AuthenticationToken authenticationToken = authenticationTokenRepository
                 .findByTokenAndIsActive(token, true);
-        if (authenticationToken == null) {
+        if (authenticationToken.equals(null)) {
             throw new RuntimeException("Token no encontrado");
         }
         authenticationToken.setActive(false);

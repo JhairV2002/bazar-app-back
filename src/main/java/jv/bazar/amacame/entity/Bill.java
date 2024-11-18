@@ -26,9 +26,6 @@ public class Bill {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private BillDetail billDetail;
     private BigDecimal billDetailTotal;
-    @Enumerated(EnumType.STRING)
-    private BillStatusEnum billStatus;
-    private boolean hasProductPromo;
     private boolean hasBillPromo;
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Promos promo;

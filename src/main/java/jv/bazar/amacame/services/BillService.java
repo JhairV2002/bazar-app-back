@@ -6,88 +6,79 @@ import jv.bazar.amacame.dto.req.BillReqDTO;
 
 
 import jv.bazar.amacame.dto.res.BillResDTO;
-import jv.bazar.amacame.entity.Bill;
-import jv.bazar.amacame.enums.BillStatusEnum;
-import jv.bazar.amacame.exceptions.CustomErrorException;
+import jv.bazar.amacame.factories.CalculationFactory;
 import jv.bazar.amacame.factory.BillPromoFactory;
 import jv.bazar.amacame.factory.ProductPromoFactory;
+import jv.bazar.amacame.interfaces.IBillService;
 import jv.bazar.amacame.mappers.BillMapper;
 import jv.bazar.amacame.repositories.BillRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import static jv.bazar.amacame.cons.CalculateComponentsNames.CALCULATE_AMOUNT_STRATEGY;
+import static jv.bazar.amacame.cons.CalculateComponentsNames.CALCULATE_PROFIT_STRATEGY;
+
 @Service
-public class BillService {
-    @Autowired
-    private BillRepository billRepository;
+public class BillService implements IBillService {
+    private final BillRepository billRepository;
 
-    @Autowired
-    private BillMapper billMapper;
+    private final BillMapper billMapper;
 
-    @Autowired
-    private  BillDetailLineService billDetailLineService;
+    private final BillDetailLineService billDetailLineService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private BillPromoFactory billPromoFactory;
+    private final BillPromoFactory billPromoFactory;
 
-    @Autowired
-    private ProductPromoFactory productPromoFactory;
+    private final ProductPromoFactory productPromoFactory;
 
+    private final CalculationFactory calculationFactory;
 
-    public BillResDTO saveBill(BillReqDTO billReqDTO) {
-        if (billReqDTO.getBillStatus() == null) {
-            throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("El estado de la factura es requerido")
-                    .build();
-        }
+    public BillService(BillRepository billRepository, BillMapper billMapper,
+                        ProductService productService,
+                       BillDetailLineService billDetailLineService,
+                       BillPromoFactory billPromoFactory, ProductPromoFactory productPromoFactory,
+                       CalculationFactory calculationFactory) {
+        this.billRepository = billRepository;
+        this.billMapper = billMapper;
+        this.productService = productService;
+        this.billPromoFactory = billPromoFactory;
+        this.billDetailLineService = billDetailLineService;
+        this.productPromoFactory = productPromoFactory;
+        this.calculationFactory = calculationFactory;
+    }
+
+    @Override
+    public BillResDTO createBill(BillReqDTO billReqDTO) {
         billReqDTO.getBillDetail().setBillDetailLines(
                 billDetailLineService.calculatePriceAndProfitByProduct(
                         billReqDTO.getBillDetail().getBillDetailLines()
                 ));
+
+        billReqDTO.setBillTotal(calculationFactory.calculate(CALCULATE_AMOUNT_STRATEGY, billReqDTO));
+        billReqDTO.setBillProfit(calculationFactory.calculate(CALCULATE_PROFIT_STRATEGY, billReqDTO));
 
         //aplicar promociones de factura
         if (billReqDTO.isHasBillPromo() && billReqDTO.getPromo() != null) {
             billReqDTO = billPromoFactory.applyBillPromo(billReqDTO.getPromo().getPromoType().name(), billReqDTO);
         }
 
-        billReqDTO.setBillTotal(calculateTotalAmount(billReqDTO));
-        billReqDTO.setBillProfit(calculateTotalProfit(billReqDTO));
         productService.reduceProductStock(billReqDTO.getBillDetail().getBillDetailLines());
 
         return billMapper.billToBillResDTO(billRepository.save(billMapper.billReqDtoToBill(billReqDTO)));
     }
 
-    public BillResDTO cancelBill(Long billId) {
-        Bill bill = billRepository.findById(billId).orElseThrow(() -> CustomErrorException.builder()
-                .status(HttpStatus.NOT_FOUND)
-                .message("Factura no encontrada")
-                .build());
-        if (bill.getBillStatus().equals(BillStatusEnum.CANCELADO)) {
-            throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("La factura ya se encuentra cancelada")
-                    .build();
-        }
-        bill.setBillStatus(BillStatusEnum.CANCELADO);
-        return billMapper.billToBillResDTO(billRepository.save(bill));
-
-    }
-
-    public List<BillResDTO> getAllBills() {
+    @Override
+    public List<BillResDTO> getBills() {
         return billMapper.billListToBillResDTOList(billRepository.findAll());
         //return billRepository.findAll();
     }
 
-    public List<BillResDTO> getBillsByStatus(String status) {
-        return billMapper.billListToBillResDTOList(billRepository.findByBillStatus(status));
+    @Override
+    public BillResDTO getBill(Long id) {
+        return billMapper.billToBillResDTO(billRepository.findById(id).orElse(null));
     }
 
     public BigDecimal calculateTotalAmount(BillReqDTO billReqDTO) {
@@ -112,5 +103,4 @@ public class BillService {
         }
         return totalProfit;
     }
-
 }

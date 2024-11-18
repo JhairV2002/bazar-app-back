@@ -39,9 +39,9 @@ public class SecurityConfiguration {
                 )
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers( "/auth/**").permitAll();
-                    req.requestMatchers(HttpMethod.GET,  "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
-                    req.requestMatchers(HttpMethod.POST, "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
-                    req.requestMatchers(HttpMethod.PUT, "/brands/**",  "/products/**", "/promos/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.GET,  "/brands/**",  "/products/**", "/promos/**", "/bills/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.POST, "/brands/**",  "/products/**", "/promos/**", "/bills/**").hasAnyRole(RoleEnum.ADMIN.name());
+                    req.requestMatchers(HttpMethod.PUT, "/brands/**",  "/products/**", "/promos/**", "/bills/**").hasAnyRole(RoleEnum.ADMIN.name());
                     req.anyRequest().denyAll();
                      }
                 )

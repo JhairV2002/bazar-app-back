@@ -29,15 +29,16 @@ public class BillPercentPromo implements IBillPromo {
             promoValue = promoRepository.findById(bill.getPromo().getPromoId()).get().getPromoValue();
 
             bill.setBillTotal(
-                   billService.calculateTotalAmount(bill).subtract(
-                           billService.calculateTotalAmount(bill).multiply(promoValue)
-                   )
+                    bill.getBillTotal().subtract(
+                            bill.getBillTotal().multiply(promoValue)
+                    )
             );
 
             bill.setBillProfit(
-                    billService.calculateTotalProfit(bill).subtract(
-                            billService.calculateTotalProfit(bill).multiply(promoValue)
-                    ));
+                    bill.getBillProfit().subtract(
+                            bill.getBillProfit().multiply(promoValue)
+                    )
+            );
         }
         catch (Exception e) {
             throw new CustomErrorException(HttpStatus.BAD_REQUEST, "Error al aplicar la promoción de factura", e.getMessage());

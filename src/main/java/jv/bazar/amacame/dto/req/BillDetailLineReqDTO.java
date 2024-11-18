@@ -15,6 +15,4 @@ public class BillDetailLineReqDTO {
     private BigDecimal totalPriceByProduct;
     private BigDecimal totalProfitByProduct;
     private ProductReqDTO product;
-    private Boolean hasPromo;
-    private PromoResDTO promo;
 }

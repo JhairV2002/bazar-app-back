@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface BillRepository extends JpaRepository<Bill, Long> {
-    public List<Bill> findByBillStatus(String status);
 }

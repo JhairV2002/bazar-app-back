@@ -20,9 +20,6 @@ public class BillReqDTO {
     private Boolean isActive;
     private BigDecimal billTotal;
     private BigDecimal billProfit;
-    private BillStatusEnum billStatus;
-    private boolean hasProductPromo;
     private boolean hasBillPromo;
-    private PromoTypeEnum promoType;
     private PromoReqDTO promo;
 }

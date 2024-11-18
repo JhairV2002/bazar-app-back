@@ -19,8 +19,4 @@ public class BillDetailLine {
     private BigDecimal totalPriceByProduct;
     private BigDecimal totalProfitByProduct;
     private Long quantity;
-    private boolean hasPromo;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "promo_id")
-    private Promos promo;
 }
