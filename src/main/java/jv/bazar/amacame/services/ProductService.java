@@ -216,9 +216,17 @@ public class ProductService {
     }
 
     public void reduceProductStock(List<BillDetailLineReqDTO> billDetailLineReqDTOList) {
-        for (BillDetailLineReqDTO billDetailLineReqDTO : billDetailLineReqDTOList) {
-            Product product = productRepository.findByProductIdAndIsActive(billDetailLineReqDTO.getProduct().getProductId(), true);
-            reduceProductStock(product.getProductId(), billDetailLineReqDTO.getQuantity());
+        try {
+            for (BillDetailLineReqDTO billDetailLineReqDTO : billDetailLineReqDTOList) {
+                Product product = productRepository.findByProductIdAndIsActive(billDetailLineReqDTO.getProduct().getProductId(), true);
+                reduceProductStock(product.getProductId(), billDetailLineReqDTO.getQuantity());
+            }
+        } catch (Exception e) {
+            throw CustomErrorException.builder()
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .message("Error al reducir el stock, no hay suficiente stock")
+                    .data(e.getMessage())
+                    .build();
         }
     }
 }
