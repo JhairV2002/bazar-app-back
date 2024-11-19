@@ -27,7 +27,7 @@ public class Bill {
     private BillDetail billDetail;
     private BigDecimal billDetailTotal;
     private boolean hasBillPromo;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     private Promos promo;
     private boolean isActive;
     @CreationTimestamp

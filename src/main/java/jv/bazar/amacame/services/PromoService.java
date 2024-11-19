@@ -28,16 +28,6 @@ public class PromoService {
         return new ResponseEntity<>(promosMapper.promosListToPromoResDTOList(promoRepository.findByisActive(true)), HttpStatus.OK);
     }
 
-    public ResponseEntity<PromoResDTO> saveSpecialPromo(PromoReqDTO promoReqDTO) {
-        if (promoReqDTO.getPromoType().equals(PromoTypeEnum.SPECIALPROMOS)){
-            promoReqDTO.setPromoValue(calculatePercentSpecialPromo(promoReqDTO.getSpecialPromoX(), promoReqDTO.getSpecialPromoY()));
-        }
-        return new ResponseEntity<>(promosMapper.promosToPromoResDTO(
-                promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))),
-                HttpStatus.OK
-        );
-    }
-
     public ResponseEntity<PromoResDTO> updatePromo(PromoReqDTO promoReqDTO) {
         return new ResponseEntity<>(
                 promosMapper.promosToPromoResDTO(
@@ -46,28 +36,11 @@ public class PromoService {
         );
     }
 
-    public BigDecimal calculatePercentSpecialPromo (Long promoX, Long promoY){
-        Long freeProducts;
-        BigDecimal result;
-
-        if (promoX == null || promoY == null) {
-            throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("Los valores de la promoción especial son requeridos")
-                    .build();
-        }
-        if (promoY > promoX) {
-            throw CustomErrorException.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("El valor de la promoción especial Y no puede ser mayor que el valor de la promoción especial X")
-                    .build();
-        }
-
-        freeProducts = promoX - promoY;
-
-        result = new BigDecimal(freeProducts).divide(new BigDecimal(promoX), 2, RoundingMode.HALF_UP);
-
-        return result;
+    public ResponseEntity<PromoResDTO> createPromo(PromoReqDTO promoReqDTO) {
+        return new ResponseEntity<>(
+                promosMapper.promosToPromoResDTO(
+                promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))),
+                HttpStatus.CREATED
+        );
     }
-
 }

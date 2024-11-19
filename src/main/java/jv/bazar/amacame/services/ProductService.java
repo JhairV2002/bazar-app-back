@@ -224,7 +224,7 @@ public class ProductService {
         } catch (Exception e) {
             throw CustomErrorException.builder()
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .message("Error al reducir el stock, no hay suficiente stock")
+                    .message(e.getMessage())
                     .data(e.getMessage())
                     .build();
         }

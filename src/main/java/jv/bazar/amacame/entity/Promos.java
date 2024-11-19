@@ -2,7 +2,6 @@ package jv.bazar.amacame.entity;
 
 import jakarta.persistence.*;
 import jv.bazar.amacame.cons.SchemaNamesConstants;
-import jv.bazar.amacame.enums.PromoScopeEnum;
 import jv.bazar.amacame.enums.PromoTypeEnum;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -22,11 +21,7 @@ public class Promos {
     private String promoDescription;
     @Enumerated(EnumType.STRING)
     private PromoTypeEnum promoType;
-    @Enumerated(EnumType.STRING)
-    private PromoScopeEnum promoScope; // metadata for product or bill promo
     private BigDecimal promoValue;
-    private Long specialPromoX;
-    private Long specialPromoY;
     private boolean isActive = true;
     @CreationTimestamp
     private Instant createdAt;

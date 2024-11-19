@@ -22,7 +22,7 @@ public class PromosController {
 
     @PostMapping("/save")
     public ResponseEntity<PromoResDTO> savePromo(@RequestBody PromoReqDTO promoReqDTO) {
-        return promoService.saveSpecialPromo(promoReqDTO);
+        return promoService.createPromo(promoReqDTO);
     }
 
     @PutMapping("/update")

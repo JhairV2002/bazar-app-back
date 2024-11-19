@@ -1,6 +1,5 @@
 package jv.bazar.amacame.dto.req;
 
-import jv.bazar.amacame.enums.PromoScopeEnum;
 import jv.bazar.amacame.enums.PromoTypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +15,5 @@ public class DiscountPromoReqDTO {
     private String promoName;
     private String promoDescription;
     private PromoTypeEnum promoType;
-    private PromoScopeEnum promoScope;
     private BigDecimal promoValue;
 }
