@@ -1,5 +1,6 @@
 package jv.bazar.amacame.dto.res;
 
+import jv.bazar.amacame.entity.Promos;
 import jv.bazar.amacame.enums.BillStatusEnum;
 import lombok.*;
 
@@ -20,4 +21,5 @@ public class BillResDTO {
     private BigDecimal billProfit;
     private BillDetailResDTO billDetail;
     private BillStatusEnum billStatus;
+    private PromoResDTO promo;
 }

@@ -1,6 +1,7 @@
 package jv.bazar.amacame.services;
 
 import jv.bazar.amacame.dto.req.PromoReqDTO;
+import jv.bazar.amacame.dto.res.GenericResponseDTO;
 import jv.bazar.amacame.dto.res.PromoResDTO;
 import jv.bazar.amacame.entity.Promos;
 import jv.bazar.amacame.enums.PromoTypeEnum;
@@ -24,23 +25,33 @@ public class PromoService {
     @Autowired
     private PromosMapper promosMapper;
 
-    public ResponseEntity<List<PromoResDTO>> getAllPromos() {
-        return new ResponseEntity<>(promosMapper.promosListToPromoResDTOList(promoRepository.findByisActive(true)), HttpStatus.OK);
+    public GenericResponseDTO<List<PromoResDTO>> getAllPromos() {
+        return GenericResponseDTO.<List<PromoResDTO>>builder()
+                .status(HttpStatus.OK)
+                .message("Transaccion exitosa")
+                .code(HttpStatus.OK.value())
+                .data(promosMapper.promosListToPromoResDTOList(promoRepository.findByisActive(true)))
+                .build();
     }
 
-    public ResponseEntity<PromoResDTO> updatePromo(PromoReqDTO promoReqDTO) {
-        return new ResponseEntity<>(
-                promosMapper.promosToPromoResDTO(
-                promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))),
-                HttpStatus.OK
-        );
+    public GenericResponseDTO<PromoResDTO> updatePromo(PromoReqDTO promoReqDTO) {
+
+        return GenericResponseDTO.<PromoResDTO>builder()
+                .status(HttpStatus.OK)
+                .message("Transaccion exitosa")
+                .code(HttpStatus.OK.value())
+                .data(promosMapper.promosToPromoResDTO(
+                        promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))))
+                .build();
     }
 
-    public ResponseEntity<PromoResDTO> createPromo(PromoReqDTO promoReqDTO) {
-        return new ResponseEntity<>(
-                promosMapper.promosToPromoResDTO(
-                promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))),
-                HttpStatus.CREATED
-        );
+    public GenericResponseDTO<PromoResDTO> createPromo(PromoReqDTO promoReqDTO) {
+        return GenericResponseDTO.<PromoResDTO>builder()
+                .status(HttpStatus.CREATED)
+                .message("Transaccion exitosa")
+                .code(HttpStatus.CREATED.value())
+                .data(promosMapper.promosToPromoResDTO(
+                        promoRepository.save(promosMapper.promoReqDTOToPromos(promoReqDTO))))
+                .build();
     }
 }
