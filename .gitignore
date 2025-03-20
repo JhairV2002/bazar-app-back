@@ -31,3 +31,13 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### DB ###
+/src/main/resources/application.properties
+
+### docker ###
+/docker-compose.yml
+
+### Db volume ###
+
+/db_volume

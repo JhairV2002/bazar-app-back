@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  amacame_app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - amacame_db
+    networks:
+        - amacame_net
+  amacame_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: amacame_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+        - "5432:5432"
+    volumes:
+       # - /home/helldev/workspace/docker_apps/amacame_db:/var/lib/postgresql/data // linux
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - amacame_net
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+    db_data:
+networks:
+    amacame_net:
+        driver: bridge
